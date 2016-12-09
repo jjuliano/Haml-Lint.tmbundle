@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env sh
+
+if [ -z "$TM_RUBY" ]; then
+  echo "Need to set TM_RUBY"
+  exit 1
+fi
+
+tmp=$(mktemp)
+mv "$tmp" "$tmp".yml
+export HAML_LINT_RUBOCOP_CONF=$tmp
+version=$("$TM_RUBY" -v | awk '{ print $2 }' | sed 's/[a-zA-Z].*//g')
+echo "AllCops:\n  TargetRubyVersion: ${version:0:3}\n" > $HAML_LINT_RUBOCOP_CONF
+
+"$TM_RUBY" "$TM_BUNDLE_SUPPORT/haml-lint.rb"
+</string>
+	<key>input</key>
+	<string>document</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>name</key>
+	<string>Haml-Lint</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>source</string>
+	<key>outputLocation</key>
+	<string>discard</string>
+	<key>scope</key>
+	<string>text.haml</string>
+	<key>semanticClass</key>
+	<string>callback.document.did-save</string>
+	<key>uuid</key>
+	<string>BC742D1C-5FFF-4EA3-B394-604C8675F005</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>
